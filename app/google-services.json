@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "78003889942",
+    "project_id": "pdforganizer-ce60f",
+    "storage_bucket": "pdforganizer-ce60f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78003889942:android:1c8e57484c8492fcef1237",
+        "android_client_info": {
+          "package_name": "com.example.pdforganizer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOs-8MWC_8otqnrRFM2iRMmzM1IvDS_Pk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
