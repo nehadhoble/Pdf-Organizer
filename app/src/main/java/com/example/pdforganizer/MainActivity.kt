@@ -3,10 +3,12 @@ package com.example.pdforganizer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.documentfile.provider.DocumentFile
 import com.example.pdforganizer.databinding.ActivityMainBinding
+import com.example.pdforganizer.dto.PdfFile
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -62,11 +64,41 @@ class MainActivity : AppCompatActivity() {
         pdfFileUri.let {uri->
             if (uri != null) {
                 mStoragRef.putFile(uri).addOnSuccessListener {
+                   mStoragRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                       val pdfFile = PdfFile(fileName, downloadUri.toString()) //creating te instance of pdf file
+                       databaseReference.push().key?.let{pushKey ->
+                           databaseReference.child(pushKey).setValue(pdfFile)
+                               .addOnSuccessListener {
 
-                }.addOnProgressListener {
+                                   pdfFileUri = null
+                                   binding.fileName.text = resources.getString(R.string.no_pdf_file_selected_yet)
+                                   Toast.makeText(this,"UPloaded Successfully", Toast.LENGTH_LONG).show()
+                                   if(binding.progressBar.isShown){
+                                       binding.progressBar.visibility = View.GONE
+                                   }
 
+
+                               }
+                               .addOnFailureListener{
+                                   Toast.makeText(this,it.message.toString(), Toast.LENGTH_LONG).show()
+                                   if(binding.progressBar.isShown){
+                                       binding.progressBar.visibility = View.GONE
+                                   }
+                               }
+                       }
+
+                   }
+                }.addOnProgressListener {uploadTask ->
+                    val uploadingPercent = uploadTask.bytesTransferred * 100 / uploadTask.totalByteCount
+                    binding.progressBar.progress = uploadingPercent.toInt()
+                    if(!binding.progressBar.isShown){
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
                 }.addOnFailureListener{
-
+                    if(binding.progressBar.isShown){
+                        binding.progressBar.visibility = View.GONE
+                    }
+                    Toast.makeText(this,it.message.toString(), Toast.LENGTH_LONG).show()
                 }
             } else{
                 Toast.makeText(this, "Pdf file url not found", Toast.LENGTH_LONG).show()
