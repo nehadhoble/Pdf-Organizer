@@ -1,5 +1,6 @@
 package com.example.pdforganizer
 
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -38,6 +39,11 @@ class MainActivity : AppCompatActivity() {
             }else{
                 Toast.makeText(this, "Please select pdf first", Toast.LENGTH_LONG).show()
             }
+        }
+
+        binding.showAllBtn.setOnClickListener {
+            val intent = Intent(this, AllPdfActivity::class.java)
+            startActivity(intent)
         }
     }
 
